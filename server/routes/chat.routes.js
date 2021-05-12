@@ -1,27 +1,17 @@
 const router = require("express").Router();
-const UserModel = require('../models/User.model')
 const Conversation = require('../models/Conversation.model')
 const Message = require('../models/Message.model')
-
-// GET all users names to show on the home page
-router.get("/users", (req, res, next) => {
-  UserModel.find()
-    .then((response) => {
-      res.status(200).json( response)
-    })
-    .catch((err) => {
-      next(err)
-    })
-});
 
 // A route to return the converstaion id between two participants if it already exists
 // or create a new converstaion, when users chat for the first time
 router.post('/conversation', (req, res, next) => {
+    //The user will send an array of participant ids in the chat (usually just two)
+    // eg. participants = ['609b63324f3c1632c8ff35f4', '609b63644f3c1632c8ff35f5']
     const {participants} = req.body
     Conversation.findOne({ participants: { $all: participants} })
       .then((found) => {
         if (found) {
-          //Converstaion between the participants already present
+          //Conversation between the participants already present
           res.status(200).json(found)
         }
         else {

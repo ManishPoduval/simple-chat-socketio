@@ -3,15 +3,21 @@ import React, { Component } from 'react'
 import config from '../config'
 import './ChatPage.css'
 import io from "socket.io-client";
+import { Redirect } from 'react-router-dom';
 
 let socket = ''
 
 class ChatPage extends Component {
-
+    // Assing a ref to the messages div
+    messagesEnd = React.createRef()
     state = {
         loading: true, 
         messageList: [],
         currentMessage: '',
+    }
+
+    scrollToBottom = () => {
+        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
     }
 
     componentDidMount(){
@@ -24,6 +30,8 @@ class ChatPage extends Component {
                 this.setState({
                     loading: false, 
                     messageList: response.data
+                }, () => {
+                    this.scrollToBottom();
                 })
             })
         // ensure that the user is connected to a specific chat via webSocket    
@@ -34,6 +42,8 @@ class ChatPage extends Component {
             console.log('Got data', data)
             this.setState({
                 messageList: [...this.state.messageList, data]
+            }, () => {
+                this.scrollToBottom();
             })
         });    
     }
@@ -55,10 +65,12 @@ class ChatPage extends Component {
           };
           
           // emit it so that everyone connected to the same chat receives the message
-          await socket.emit("send_message", messageContent);
-          this.setState({
+        await socket.emit("send_message", messageContent);
+        this.setState({
             messageList: [...this.state.messageList, messageContent.content],
             currentMessage: ''
+        }, () => {
+            this.scrollToBottom();
         })
     }
 
@@ -69,6 +81,10 @@ class ChatPage extends Component {
 
         if (loading) {
             <p>Loading all messages . . .</p>
+        }
+
+        if(!user){
+            return <Redirect to={'/signin'}  />
         }
 
         return (
@@ -87,9 +103,12 @@ class ChatPage extends Component {
                                 );
                             })
                         }
+                        <div style={{ float:"left", clear: "both" }}
+                            ref={(el) => { this.messagesEnd = el; }}>
+                        </div>
                     </div>
                     <div className="messageInputs">
-                        <input type="text" placeholder="Message..."
+                        <input value={this.state.currentMessage} type="text" placeholder="Message..."
                             onChange={this.handleMessageInput}
                         />
                         <button onClick={this.sendMessage}>Send</button>

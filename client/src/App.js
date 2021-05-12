@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Route, Switch, withRouter} from 'react-router-dom'
+import {Redirect, Route, Switch, withRouter} from 'react-router-dom'
 import UserList from './components/UserList'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
@@ -45,6 +45,8 @@ class App extends Component {
       .then(() => {
         this.setState({
           user: null
+        }, () => {
+          this.props.history.push('/')
         })
       })
       .catch((errorObj) => {
@@ -53,7 +55,7 @@ class App extends Component {
           error: errorObj.response.data
         })
     })
-}
+  }
 
   handleSignUp = (e) => {
     e.preventDefault()
