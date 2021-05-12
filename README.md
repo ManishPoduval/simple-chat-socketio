@@ -7,7 +7,7 @@ Before implementing, it's important to understand what are are websockets and ho
 We will use [socket.io](https://www.npmjs.com/package/socket.io) package on the server side and the  [socket.io-client](https://www.npmjs.com/package/socket.io-client) package on the client side
 
 #### Server side installation
-Run this command in your client side terminal
+Run this command in your server side terminal
 ```
 npm i socket.io
 ```
