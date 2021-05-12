@@ -92,4 +92,55 @@ There's so much to say here, but i'll leave it upto you'll to analyse this compo
 
 ChatPage.js component: [Link](https://gist.github.com/ManishPoduval/76e466c39dd9bc98aa4917edb5f69b69)
 
+The important things to note : 
+
+#### 2 .1 Emit an event to join a room 
+
+```js
+socket.emit("join_chat",  conversationId);
+``` 
+
+Note: on the server side  we have the `on` event that handles this in `server.js`  (Don't type the code below, it already there in the server side)
+
+```js
+socket.on("join_chat", (data) => {
+	socket.join(data);
+});
+```
+
+#### 2.2 Handle events to deal with messages been sent back an forth
+
+```js
+socket.on("receive_message", (data) => {
+	 //code
+	 // here we will get the messages that the other user sends to us. Ensure you update your state here
+})
+```
+
+Note: on the server side we have the `emit` event that sends us the message (Don't type the code below, it already there in the server side)
+
+```js
+// specifically targets a particular chat and emits the data to it
+socket.to(data.chatId).emit("receive_message", data.content);
+```
+
+#### 2.3   Send messages when the user types in the inputs and sends it
+
+In the event listener of the submit button  we `emit` this web socket event and  
+
+```js
+socket.emit("send_message", messageContent);
+```
+
+Note: on the server side we have the `on` event that handles the message we type and adds it to the database (Don't type the code below, it already there in the server side)
+
+```js
+socket.on("send_message", (data) => {
+	// add the data to the database 
+	// emit the data to all the people in the chat
+})
+```
+
+Hope this helps, if it does not, ask us for more explanations :) 
+
 Happy coding! :heart:
