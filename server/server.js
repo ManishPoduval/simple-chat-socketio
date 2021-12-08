@@ -49,7 +49,18 @@ io.on('connection', (socket) => {
         let allMessages = await MessageModel.find({conversationId: chatId}).populate('sender')
         socket.to(data.chatId).emit("receive_message", allMessages);
       })
-    
+  });
+
+  //--------------------------------------------------------
+  //-------------COLOR PICKER CHANGES ----------------------
+  
+  socket.on("join_color_chat", (data) => {
+    socket.join(data);
+    console.log("User Joined Color Room: " + data);
+  });
+
+  socket.on("send_color", (data) => {
+    socket.to(data.chatId).emit("receive_color", data.color);
   });
 });
 

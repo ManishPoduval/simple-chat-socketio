@@ -10,6 +10,7 @@ function MyNav(props) {
       <Navbar.Collapse  id="basic-navbar-nav">
         <Nav  className="mr-auto">
           <Link to="/">Users</Link>
+          <Link to="/color">Color Picker</Link>
           {
             user ? (
               <button onClick={onLogout} >Logout</button>

@@ -8,6 +8,7 @@ import config from './config'
 import MyNav from './components/MyNav'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import ChatPage from './components/ChatPage'
+import ColorPicker from './components/ColorPicker'
 
 function App() {
 
@@ -15,6 +16,11 @@ function App() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
+
+  //----------------------------------------
+  //--------COLOR PICKER--------------------
+  const [color, setColor] = useState("#ffffff")
+
 
   useEffect(() => {
       const getUsers = async () => {
@@ -68,13 +74,16 @@ function App() {
     setUser(response.data)
   }
 
+  const handleColorChange = (newColor) => {
+    setColor(newColor)
+  }
 
   if(loading) {
     return <p>Loading user . . .</p>
   }
 
   return (
-    <div>
+    <div style={{backgroundColor: color}}>
         <h1>Socket.io example</h1>
         <MyNav onLogout={handleLogout} user={user}  />
         <Routes>
@@ -82,6 +91,7 @@ function App() {
             <Route path="/signin" element={<SignIn onSignIn={handleSignIn} />}/>
             <Route path="/signup"  element={<SignUp onSubmit={handleSignUp} />}/>
             <Route path="/chat/:chatId"  element={ <ChatPage user={user} />}/>
+            <Route path="/color"  element={ <ColorPicker onChange={handleColorChange} color={color}/>}/>
         </Routes>
       </div>
   )
