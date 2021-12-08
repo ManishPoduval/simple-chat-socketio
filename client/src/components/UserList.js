@@ -1,13 +1,16 @@
 import axios from 'axios'
-import React, { Component } from 'react'
 import config from '../config'
+import {useNavigate} from 'react-router-dom'
 
-class UserList extends Component {
+function UserList(props) {
 
-    handleChatClick = (chatUserId) => {
-        const { user } = this.props
+    const navigate = useNavigate()
+
+    const handleChatClick = (chatUserId) => {
+        const { user } = props
         if(!user){
-            this.props.history.push('/signin')
+            navigate('/signin')
+            return; 
         }
         else {
            let data = {
@@ -15,36 +18,35 @@ class UserList extends Component {
            }
            axios.post(`${config.API_URL}/api/conversation`, data, {withCredentials: true})
                 .then((response) => {
-                    this.props.history.push(`/chat/${response.data._id}`)
+                    navigate(`/chat/${response.data._id}`)
                 })
             
         }
     }
 
-    render() {
-        const { users, user } = this.props
-        // remove yourself if you're signed in
-        let allUsers = users
-        if (user) {
-            allUsers = users.filter(u => u._id !== user._id)
-        }
-        return (
-            <div>
-                {
-                    allUsers.map((user) => {
-                        return (
-                            <p>
-                                {user.name} 
-                                <button onClick={() => { this.handleChatClick(user._id) }}>
-                                   Chat
-                                </button>
-                            </p>
-                        )
-                    })
-                }
-            </div>
-        )
+    const { users, user } = props
+    
+    // remove yourself if you're signed in
+    let allUsers = users
+    if (user) {
+        allUsers = users.filter(u => u._id !== user._id)
     }
+    return (
+        <div>
+            {
+                allUsers.map((user) => {
+                    return (
+                        <p>
+                            {user.name} 
+                            <button onClick={() => { handleChatClick(user._id) }}>
+                               Chat
+                            </button>
+                        </p>
+                    )
+                })
+            }
+        </div>
+    )
 }
 
 export default UserList
