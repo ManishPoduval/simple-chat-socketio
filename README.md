@@ -1,6 +1,6 @@
   # Socket.io  in MERN Stack
 
-Before implementing, it's important to understand what are are websockets and how they work. 
+Before implementing, it's important to understand what websockets are and how they work. So please ask your LT, TA for an explanation on WebSocket and WebRTC before reading further. 
 
 ## Install necessary packages
 
